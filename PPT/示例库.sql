@@ -1,38 +1,59 @@
+--专业信息
+CREATE TABLE Major(
+	MajorID int IDENTITY(1,1)  NOT NULL, --自动增长列
+	Name nvarchar(10) NOT NULL,
+	Depict ntext NULL
+) 
 
-
-
-CREATE TABLE Class(
+INSERT INTO Major(Name, Depict)
+VALUES('计算机科学与技术','信息工程学院')
+INSERT INTO Major(Name, Depict)
+VALUES('数学与应用数学','信息工程学院')
+INSERT INTO Major(Name, Depict)
+VALUES('应用统计学','信息工程学院')
+INSERT INTO Major(Name, Depict)
+VALUES('电子工程','信息工程学院')
+INSERT INTO Major(Name, Depict)
+VALUES('信息系统与信息管理','信息工程学院')
+INSERT INTO Major(Name, Depict)
+VALUES('物联网工程','信息工程学院')
+--===================================================================================
 --班级信息
-	ClassID int IDENTITY(1,1)  NOT NULL, --自动增长列
-	Name nvarchar(10) COLLATE Chinese_PRC_CI_AS NOT NULL,
+CREATE TABLE Class(
+	ClassID int NOT NULL CONSTRAINT [PK_Class] PRIMARY KEY CLUSTERED ,  
+	Name nvarchar(10) NOT NULL,
 	TeacherID varchar(20) NULL,
 	EntranceTime datetime NULL,
-	Major int NOT NULL,
+	MajorID int NOT NULL,
 	Number int NULL default (0)--班级学生人数
 ) 
 
-INSERT INTO Class(Name, EntranceTime, Major)
-VALUES('计算机科学与技术1班','2016-8-26', 1)
-INSERT INTO Class(Name, EntranceTime, Major)
-VALUES('计算机科学与技术2班','2016-8-26', 1)
-INSERT INTO Class(Name, EntranceTime, Major)
-VALUES('物联网工程1班','2016-8-26', 2)
-INSERT INTO Class(Name, EntranceTime, Major)
-VALUES('数学与应用数学1班','2016-8-26', 3 )
+INSERT INTO Class(ClassID, Name, EntranceTime, MajorID)
+VALUES(1, '1班','2016-8-26', 1)
+INSERT INTO Class(ClassID, Name, EntranceTime, MajorID)
+VALUES(2, '2班','2016-8-26', 1)
+INSERT INTO Class(ClassID, Name, EntranceTime, MajorID)
+VALUES(3, '1班','2016-8-26', 2)
+INSERT INTO Class(ClassID, Name, EntranceTime, MajorID)
+VALUES(4, '1班','2016-8-26', 3)
 
 --更新班级学生人数
 update Class
 set Number = (select Count(*) from Student where Student.ClassID = Class.ClassID)
 
 --===================================================================================
+--学生信息
 CREATE TABLE Student(
-	--学生信息
 	StudentID varchar(20) NOT NULL,
-	Name nvarchar(10) COLLATE Chinese_PRC_CI_AS NOT NULL,
+	Name nvarchar(10) NOT NULL,
 	Sex int NOT NULL,
 	Birthday datetime NULL,
-	Tel varchar(15) COLLATE Chinese_PRC_CI_AS NULL,
-	ClassID int NOT NULL
+	Tel varchar(15) NULL,
+	ClassID int NOT NULL,
+	CONSTRAINT [PK_Student] PRIMARY KEY CLUSTERED 
+	(
+		StudentID ASC
+	)
 ) 
 --插入基础数据
 insert into Student(StudentID, Name,Sex, Birthday, Tel, ClassID)
@@ -57,3 +78,5 @@ select StudentID, Name,
 		'未定义'
 	end) AS 性别
 from Student
+
+--===================================================================================
